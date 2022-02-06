@@ -1,15 +1,13 @@
-
-#include "list.hpp"
-
+#include "list.cpp"
 #include <iostream>
 #include <cassert>
 
 void test_default_constructor()
 {
-    list l;
+    list<int> l;
     assert(l.empty());
     assert(l.size() == 0);
-    list* p = new list;
+    list<int>* p = new list<int>;
     assert(p->empty());
     assert(p->size() == 0);
     delete p;
@@ -17,40 +15,56 @@ void test_default_constructor()
 
 void test_constructor()
 {
-    list l(6, 0);
+    list<int> l(6, 0);
     assert(! l.empty());
     assert(l.size() == 6);
 }
 
 void test_push_back()
 {
-    list l;
+    list<int> l;
     assert(l.empty());
-    for (list::size_type i = 0; i < 8; ++i) {
+    for (list<int>::size_type i = 0; i < 8; ++i) {
         l.push_back(2 * i);
     }
     assert(l.size() == 8);
-    for (list::size_type i = 0; i < l.size(); ++i) {
-        assert(l.access(i) == (list::value_type)(2 * i));
+    for (list<int>::size_type i = 0; i < l.size(); ++i) {
+        assert(l.access(i) == (list<int>::value_type)(2 * i));
     }
+
 }
 
 void test_push_front()
 {
-    list l;
+    list<int> l;
     assert(l.empty());
-    for (list::size_type i = 0; i < 8; ++i) {
+    for (list<int>::size_type i = 0; i < 8; ++i) {
         l.push_front(2 * i);
     }
     assert(l.size() == 8);
-    for (list::size_type i = 0; i < l.size(); ++i) {
-        assert(l.access(l.size() - 1 - i) == (list::value_type)(2 * i));
+    for (list<int>::size_type i = 0; i < l.size(); ++i) {
+        assert(l.access(l.size() - 1 - i) == (list<int>::value_type)(2 * i));
+    }
+
+}
+
+void test_bubble_sort()
+{
+    list<unsigned int> l;
+    assert(l.empty());
+    for (unsigned int i = 0; i < 8; ++i) {
+        l.push_front(2 * i);
+    }
+    l.bubble_sort();
+    for (unsigned int i = 0; i < l.size(); ++i) {
+	    std::cout << l.access(i) << std::endl;
+	    assert(l.access(i) == i*2); 
     }
 }
 
 void test_pop_back()
 {
-    list l(5, 89);
+    list<int> l(5, 89);
     assert(l.size() == 5);
     while (! l.empty()) {
         l.pop_back();
@@ -59,7 +73,7 @@ void test_pop_back()
 
 void test_pop_front()
 {
-    list l(89, 5);
+    list<int> l(89, 5);
     assert(l.size() == 89);
     while (! l.empty()) {
         l.pop_front();
@@ -68,18 +82,18 @@ void test_pop_front()
 
 void test_copy_constructor()
 {
-	list b(56, 0);
+	list<int> b(56, 0);
     assert(b.size() == 56);
-    list a(b);
+    list<int> a(b);
     assert(a.size() == 56);
-    for (list::size_type i = 0; i < a.size(); ++i) {
+    for (list<int>::size_type i = 0; i < a.size(); ++i) {
         assert(a.access(i) == 0);
     }
 }
 
 void test_insert()
 {
-    list a;
+    list<int> a;
     assert(a.size() == 0);
     assert(a.empty());
     /// 0 1 2 3 4 5 6 7 8 9
@@ -116,5 +130,6 @@ int main()
     test_pop_front();
     test_insert();
     test_copy_constructor();
+    test_bubble_sort();
 	return 0;
 }

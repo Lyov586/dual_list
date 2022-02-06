@@ -2,8 +2,10 @@
 #include "list.hpp"
 
 #include <cassert>
+#include <iostream>
 
-class list::node
+template <typename T>
+class list<T>::node
 {
 public:
     value_type m_value;
@@ -23,9 +25,10 @@ public:
     }
 };
 
-std::ostream& operator<<(std::ostream& out, const list& l)
+template <int>
+std::ostream& operator<<(std::ostream& out, const list<int>& l)
 {
-    list::node* current = l.m_head;
+    list<int>::node* current = l.m_head;
     while (current != nullptr) {
         out << current->m_value << " ";
         current = current->m_next;
@@ -33,7 +36,8 @@ std::ostream& operator<<(std::ostream& out, const list& l)
     return out;
 }
 
-list::size_type list::size() const
+template <typename T>
+typename list<T>::size_type list<T>::size() const
 {
     node* current = m_head;
     size_type count = 0;
@@ -44,18 +48,48 @@ list::size_type list::size() const
     return count;
 }
 
-bool list::empty() const
+template <typename T>
+void list<T>::swap(node* n, node* p)
+{
+	n->m_value = n->m_value + p->m_value;
+	p->m_value = n->m_value - p->m_value;
+	n->m_value = n->m_value - p->m_value;
+}
+
+template <typename T>
+void list<T>::bubble_sort()
+{
+	node* current = nullptr;
+	node* next = nullptr;
+	for(unsigned int i = 0; i < size()-1; i++) {
+	current = m_head;
+	   for(unsigned int k = 0; k < size()-1; k++) {
+		   next = current->m_next;
+		   if (current->m_value > next->m_value){
+		   	swap(current, next);
+		   }
+		   current = current->m_next;
+		}
+	}
+}
+
+template <typename T>
+bool list<T>::empty() const
 {
     return (m_head == nullptr);
 }
 
-void list::push_front(const value_type& value) // O(1)
+
+template <typename T>
+void list<T>::push_front(const value_type& value) // O(1)
 {
     node* new_node = new node(value, m_head, nullptr);
     m_head = new_node;
 }
 
-void list::push_back(const value_type& value) // O(n)
+
+template <typename T>
+void list<T>::push_back(const value_type& value) // O(n)
 {
     node* new_node = new node(value, nullptr, m_head);
     if (m_head == nullptr) {
@@ -70,7 +104,9 @@ void list::push_back(const value_type& value) // O(n)
     }
 }
 
-void list::insert(const size_type& index, const value_type& value)
+
+template <typename T>
+void list<T>::insert(const size_type& index, const value_type& value)
 {
     assert(index >= 0);
     assert(index <= size());
@@ -91,7 +127,8 @@ void list::insert(const size_type& index, const value_type& value)
     }
 }
 
-void list::pop_front()
+template <typename T>
+void list<T>::pop_front()
 {
 
     assert(m_head != nullptr);
@@ -105,7 +142,8 @@ void list::pop_front()
     delete n;
 }
 
-void list::pop_back()
+template <typename T>
+void list<T>::pop_back()
 {
     assert(m_head != nullptr);
     if (m_head->m_next == nullptr) {
@@ -120,7 +158,9 @@ void list::pop_back()
     }
 }
 
-list::node* list::access_helper(const size_type& index) const
+
+template <typename T>
+typename list<T>::node* list<T>::access_helper(const size_type& index) const
 {
     assert(index >= 0);
     assert(index < size());
@@ -133,19 +173,25 @@ list::node* list::access_helper(const size_type& index) const
 	return current;
 }
 
-list::value_type list::access(const size_type& index) const
+
+template <typename T>
+typename list<T>::value_type list<T>::access(const size_type& index) const
 {
     node* n = access_helper(index);
     assert(n != nullptr);
 	return n->m_value;
 }
 
-list::list()
+
+template <typename T>
+list<T>::list()
     : m_head(nullptr)
 {
 }
 
-list::list(size_type n, const value_type& default_value)
+
+template <typename T>
+list<T>::list(size_type n, const value_type& default_value)
     : m_head(nullptr)
 {
     node* current = nullptr;
@@ -162,14 +208,18 @@ list::list(size_type n, const value_type& default_value)
     }
 }
 
-list::list(const list& b)
+
+template <typename T>
+list<T>::list(const list& b)
 	: m_head(nullptr)
 {
     *this = b;
 
 }
 
-const list& list::operator=(const list& c)
+
+template <typename T>
+const list<T>& list<T>::operator=(const list<T>& c)
 {
     while(!empty())
  
@@ -188,7 +238,9 @@ const list& list::operator=(const list& c)
     return *this;
 }
 
-list::~list()
+
+template <typename T>
+list<T>::~list()
 {
     while(!empty())
 
